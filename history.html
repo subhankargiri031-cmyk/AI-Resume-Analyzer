@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{{ url_for('index') }}">Resume<span>Match</span></a>
+        <nav>
+            <a href="{{ url_for('index') }}">Analyzer</a>
+            <a href="{{ url_for('history') }}">History</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">YOUR RECORDS</p>
+            <h1>Analysis history</h1>
+            <p>Review previous resume comparisons.</p>
+        </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="panel table-panel">
+            {% if records %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Resume</th>
+                                <th>Match</th>
+                                <th>Date</th>
+                                <th>Report</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                                <tr>
+                                    <td>{{ record.candidate_name }}</td>
+                                    <td>{{ record.resume_filename }}</td>
+                                    <td>{{ "%.2f"|format(record.match_score|float) }}%</td>
+                                    <td>{{ record.created_at }}</td>
+                                    <td>
+                                        <a href="{{ url_for('result', result_id=record.id) }}">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No analyses saved yet. Analyze a resume to create your first record.</p>
+            {% endif %}
+        </section>
+
+        <a class="button-link" href="{{ url_for('index') }}">Back to analyzer</a>
+    </main>
+</body>
+</html>

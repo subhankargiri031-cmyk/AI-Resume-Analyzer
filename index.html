@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{{ url_for('index') }}">Resume<span>Match</span></a>
+        <nav>
+            <a href="{{ url_for('index') }}">Analyzer</a>
+            <a href="{{ url_for('history') }}">History</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">CAREER TOOLKIT</p>
+            <h1>Find your match.<br><span>Build your future.</span></h1>
+            <p>Compare your resume with a job description and identify matching and missing skills.</p>
+        </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="panel">
+            <h2>Analyze your resume</h2>
+            <p class="muted">Complete all fields below to begin.</p>
+
+            <form action="{{ url_for('analyze') }}" method="POST"
+                  enctype="multipart/form-data">
+                <label for="candidate_name">Candidate name</label>
+                <input id="candidate_name" name="candidate_name"
+                       type="text" maxlength="100" required
+                       placeholder="Enter your name">
+
+                <label for="resume">Upload resume (PDF, maximum 5 MB)</label>
+                <input id="resume" name="resume" type="file"
+                       accept=".pdf,application/pdf" required>
+
+                <label for="job_description">Job description</label>
+                <textarea id="job_description" name="job_description"
+                          rows="8" required
+                          placeholder="Paste the job description here..."></textarea>
+
+                <button type="submit">Analyze Resume</button>
+            </form>
+        </section>
+
+        <section class="feature-grid">
+            <article class="feature">
+                <h3>Skill extraction</h3>
+                <p>Identify supported skills mentioned in your resume.</p>
+            </article>
+            <article class="feature">
+                <h3>Match score</h3>
+                <p>See the percentage of recognized job skills found in your resume.</p>
+            </article>
+            <article class="feature">
+                <h3>Analysis history</h3>
+                <p>Review previous analyses saved in your database.</p>
+            </article>
+        </section>
+
+        <p class="note">Your resume is processed for this analysis. This demo is not a hiring decision tool.</p>
+    </main>
+</body>
+</html>

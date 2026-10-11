@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{{ url_for('index') }}">Resume<span>Match</span></a>
+        <nav>
+            <a href="{{ url_for('index') }}">Analyzer</a>
+            <a href="{{ url_for('history') }}">History</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="panel">
+            <p class="eyebrow">ANALYSIS COMPLETE</p>
+            <h1>Resume Match Report</h1>
+            <p class="muted">
+                Candidate: {{ analysis.candidate_name }}
+            </p>
+
+            <div class="score">{{ "%.2f"|format(analysis.match_score|float) }}%</div>
+            <div class="progress">
+                <div class="progress-fill"
+                     style="width: {{ analysis.match_score }}%"></div>
+            </div>
+            <p class="muted">Percentage of recognized job skills found in your resume.</p>
+        </section>
+
+        <section class="result-grid">
+            <article class="panel">
+                <h2>Matched skills</h2>
+                {% if analysis.matched_skills %}
+                    <div class="chips">
+                        {% for skill in analysis.matched_skills.split(", ") %}
+                            <span class="chip success">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No matching skills found.</p>
+                {% endif %}
+            </article>
+
+            <article class="panel">
+                <h2>Missing skills</h2>
+                {% if analysis.missing_skills %}
+                    <div class="chips">
+                        {% for skill in analysis.missing_skills.split(", ") %}
+                            <span class="chip warning">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>All recognized required skills were found.</p>
+                {% endif %}
+            </article>
+
+            <article class="panel full-width">
+                <h2>Skills found in resume</h2>
+                {% if analysis.resume_skills %}
+                    <div class="chips">
+                        {% for skill in analysis.resume_skills.split(", ") %}
+                            <span class="chip">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No supported skills were found in the resume.</p>
+                {% endif %}
+            </article>
+        </section>
+
+        <div class="actions">
+            <a class="button-link" href="{{ url_for('index') }}">Analyze another resume</a>
+            <a class="button-link secondary" href="{{ url_for('history') }}">View history</a>
+        </div>
+
+        <p class="note">This score is based on keyword matching, not an assessment of overall candidate quality.</p>
+    </main>
+</body>
+</html>
